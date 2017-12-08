@@ -1,5 +1,3 @@
-package cn.bmob.javacloud.test;
-
 import cn.bmob.javacloud.stub.*;
 
 public class encrypt extends CloudHandler {
