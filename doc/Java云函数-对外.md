@@ -550,6 +550,13 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 		String Encode(byte[] data)
 		byte[] Decode(String str)
 
+### Hex
+
+静态方法：
+
+		String Encode(byte[] data)
+		byte[] Decode(String str)
+
 ### Crypto
 
 静态方法：
