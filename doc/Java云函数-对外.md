@@ -228,7 +228,7 @@ headers|JSONObject|返回的头部信息，采用String-String的格式，例如
 Bmob数据库操作对象|modules.oData|封装了Bmob的大多数api，以供开发者进行快速的业务逻辑开发，详见下文 `<Bmob数据操作>`
 日志输出对象|modules.oLog|提供了几个级别的日志输出，以便调试，详见下文 `<日志输出>`
 
-### Bmob数据操作
+#### Bmob数据操作
 
 以下均为 `modules.oData` 的方法：
 
@@ -271,7 +271,65 @@ getDBTime()|HttpResponse|获取Restful服务器的时间
 batch(JSONArray requests)|HttpResponse|批量请求
 
 
+#### 内存操作
+
+- `modules.oMemory` 提供了内存操作，可以进行快速的缓存读写，
+- **内存随时可能被重置(暂无持久化功能)**，所以在使用的时候，最好结合Base64、Bmob数据库来使用
+- 若使用得当，可以提高效率、减少Bmob api请求压力。
+- 内存块是以 **应用为单位** 分配的，也就是允许一个应用下 **跨Java云函数** 同时进行读写
+- 目前内存大小统一为 **64kb/App**(有可能变动)，可以通过 `modules.oMemory.MemorySize` 获取
+- 下面的方法除 `clean` 之外，分为 `当作byte数组` 和 `当作Map` 使用两种方式，这两种方式 **不能混用** ，如果你的应用选择将内存转为Map类型使用，就不能再用byte数组类型的接口操作内存，否则会出现异常
+- 以下均为 `modules.oMemory` 的方法
+
+		// 把内存当作byte数组使用，往内存写byte数组
+		// buff: 写入内容
+		// buffOffset: 写入内容内偏移值
+		// memoryOffset: 内存偏移值
+		// length: 写入长度
+		// return 是否写入成功(超出授予的内存大小，即返回失败)
+		public native boolean write(byte[] buff, int buffOffset, int memoryOffset,
+				int length);
+				
+		// 把内存当作byte数组使用，读取内存
+		public native boolean read(byte[] buff, int memoryOffset, int buffOffset,
+				int length);
+				
+		// 把内存当作byte数组使用，读取内存
+		// return 越界时返回null，没有写入过返回 new byte[length]
+		public native byte[] read(int memoryOffset, int length);
+		
+		// 清理内存
+		public native void clean();
+		
+		// 把内存当作Map类型操作，写入键值对
+		public native boolean putMap(String key, Serializable value);
+		
+		// 把内存当作Map类型操作，写入追加Map
+		public native boolean putMap(Map<String, Serializable> kvs);
+		
+		// 把内存当作Map类型操作，获取一个值
+		public native <T extends Serializable> T getMap(String key);
+		
+		// 把内存当作Map类型操作，覆盖写入Map
+		public native boolean writeMap(Map<String, Serializable> kvs);
+		
+		// 把内存当作Map类型操作，读取整个Map
+		public native Map<String, Serializable> readMap();
+		
+		// 把内存当作Map类型操作, 写入一个byte
+		public native boolean writeByte(int index, byte b);
+		
+		// 把内存当作Map类型操作, 读取一个byte
+		public native byte readByte(int index);
+		
+					
+
+
 #### 日志输出
+
+
+以下均为 `modules.oLog` 的方法：
+
 		// 设置需要输出的日志级别
 		// Level_All = 0
 		// Level_Debug = 1
