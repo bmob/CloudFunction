@@ -1,6 +1,11 @@
 # Javacloud
 
-Bmob平台Java云端代码
+Bmob平台Java云函数
+
+本篇文档主要将如何通过非Web的方式同步云函数
+
+详细编写、使用云函数的方法请参考[详细文档](https://github.com/bmob/BmobJavaCloud/blob/master/doc/Java%E4%BA%91%E5%87%BD%E6%95%B0-%E5%AF%B9%E5%A4%96.md)
+
 
 ## Installation
 
@@ -9,11 +14,14 @@ Bmob平台Java云端代码
 		 /libs/Bmob-JavaCloud-Apis_xxx.jar
 		 /exec/[goos]/*
 		 
+		 如，如果你用Windows开发，需要下载
+		 /exec/windows_x64/bmobjc.exe
+		 
 2. 在IDE(如eclipse)内创建java项目，并将jar文件添加到项目依赖项
 3. 创建一个类(例子为Test1)，并添加以下代码
 
 		import cn.bmob.javacloud.stub.*;
-		// import的内容不能变动，如果你写的云代码引用了一些Java自带类，请写类全名，不要添加import
+		// import的内容不能变动，如果你写的云函数引用了一些Java自带类，请写类全名，不要添加import
 
 		public class Test1 extends CloudHandler {
 		
@@ -28,12 +36,12 @@ Bmob平台Java云端代码
 4. 运行从 **/exec/[goos]/** 下载的可执行文件(下称$bmobjc)
 
 		方式1
-			$bmobjc [masterKey] [fworkSpace]
+			$bmobjc [masterKey] [workSpace]
 		方式2
 			在运行目录下创建 "bmobkeys" 文件，并将masterKey和workSpace以json形式保存
 			然后运行 '$bmobjc'
 		方式3
-			直接运行 '$bmobjc', 并按提示输入keys
+			直接运行 '$bmobjc', 并按提示输入masterKey和workSpace
 			
 5. 待代码同步完成后，可以通过以下方式访问：
 
@@ -53,30 +61,5 @@ Bmob平台Java云端代码
 			    -d '{"name":"test"}' \
 			    http://javacloud.bmob.cn/1/functions/[cloudname]
 			    
-		    
-6. 查看日志
+	- 通过SDK请求(请参考 [详细文档](https://github.com/bmob/BmobJavaCloud/blob/master/doc/Java%E4%BA%91%E5%87%BD%E6%95%B0-%E5%AF%B9%E5%A4%96.md))
 
-	附加的参数有：
-	
-	-	start	*开始时间, yyyy-MM-dd HH:mm:ss格式
-	-	end		*结束时间
-	-	key		搜索关键字(可用正则)
-	-	fun		搜索方法名
-	-	level	日志级别(N/D/W/E)
-	-	limit	限制条数(默认100，最高100)
-	-	skip	跳过行数
-		
-		
-			curl -X GET \
-			    -H "X-Bmob-Application-Id: Your Application ID" \
-			    -H "X-Bmob-REST-API-Key: Your REST API Key" \
-			    http://javacloudapi.antibrush.com/logs/[params...]
-		    
-	例如，搜索2018年10月19号一整天的，test1方法的Error级别日志
-	
-	
-		curl -X GET \
-		    -H "X-Bmob-Application-Id: Your Application ID" \
-		    -H "X-Bmob-REST-API-Key: Your REST API Key" \
-		    http://javacloudapi.antibrush.com/logs/?start=2018-10-19%2000%3A00%3A00&end=2018-10-20%2000%3A00%3A00&level=e
-		    
