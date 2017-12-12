@@ -139,7 +139,7 @@ Http请求|Secret Key|所有平台适用，可用浏览器打开
 
 		public static void onRequest(final Request request, final Response response, final Modules modules) throws Throwable {
 		// 上面这个方法体，不允许任何修改
-		// 这里使用Java编写云代码
+		// 这里使用Java编写云函数
 		// 最后一个字符必须是 }
 		}
 		
@@ -155,7 +155,7 @@ Http请求|Secret Key|所有平台适用，可用浏览器打开
 - 如果确实需要用到被禁止使用的关键字，例如查询"File"表，可用"F"+"ile"的形式拼接
 - 不可包含`/**/`注释，如需注释，请用 `//`
 - 仅可写一个Java的方法，不能写多个方法、类变量、静态变量等
-- 云代码执行完毕后，必须用response.send方法返回响应数据，否则会被当做超时，多次超时可能会被暂停使用
+- 云函数执行完毕后，必须用response.send方法返回响应数据，否则会被当做超时，多次超时可能会被暂停使用
 
 ## 工具
 
@@ -236,7 +236,7 @@ Bmob数据库操作对象|modules.oData|封装了Bmob的大多数api，以供开
 方法体|返回值|描述
 :----:|:----:|:----:
 setDomain(String)|this|设置请求的域名，仅迁移用户需要使用
-setTimeout(int)|this|设置超时时间(单位:毫秒)，与云代码超时无关
+setTimeout(int)|this|设置超时时间(单位:毫秒)，与云函数超时无关
 setHeader(String...)|this|设置请求头
 setHeader(JSONObject)|this|设置请求头
 setUserSession(String)|this|设置用户的Session Token
@@ -608,7 +608,7 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 
 	
 
-## 内置方法：
+## 内置方法
 
 		long getTime() // 获取当前毫秒
 		String fmt(String, Object...) // 格式化
@@ -619,7 +619,7 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 		arraycopy(Object from, int fromOffset, Object to, int toOffset, int length) // 复制数组内容
 	
 				
-## 示例：
+## 示例
 
 - **场景1**:
 	
@@ -688,7 +688,7 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 ##注意事项
 
 
-- 如果你编写的Java云代码经常发生运行超时、上下行超流量、滥用内存等现象，官方将会自动封停你的云函数功能，修改后向客服申请方可继续使用
+- 如果你编写的Java云函数经常发生运行超时、上下行超流量、滥用内存等现象，官方将会自动封停你的云函数功能，修改后向客服申请方可继续使用
 
 - 如果某接口调用频率较高，超过默认并发量，则会直接返回错误，解决方法：
 
