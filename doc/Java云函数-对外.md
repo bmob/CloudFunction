@@ -235,7 +235,6 @@ Bmob数据库操作对象|modules.oData|封装了Bmob的大多数api，以供开
 
 方法体|返回值|描述
 :----:|:----:|:----:
-setDomain(String)|this|设置请求的域名，仅迁移用户需要使用
 setTimeout(int)|this|设置超时时间(单位:毫秒)，与云函数超时无关
 setHeader(String...)|this|设置请求头
 setHeader(JSONObject)|this|设置请求头
