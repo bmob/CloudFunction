@@ -620,6 +620,10 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 				
 ## 示例
 
+案例主要放在了Github: **[Bmob云函数案例](https://github.com/bmob/BmobJavaCloud/tree/master/samples)**
+
+
+
 - **场景1**:
 	
 	用户在app提交了反馈，参数有"userObjectId"、"title"、"content"、"type"，需要保存到FeedBack表
@@ -696,3 +700,4 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 		3.购买更高的并发配置
 		
 - 如果需要接受更大的请求体，或返回更大的结果，请购买更高的配置
+- 如果你用 `eclipse` 等IDE开发，使用 [同步工具](https://github.com/bmob/BmobJavaCloud/tree/master/exec) 是一个不错的选择
