@@ -225,8 +225,10 @@ headers|JSONObject|返回的头部信息，采用String-String的格式，例如
 
 模块名|获取方式|作用
 :----:|:----:|:----:
-Bmob数据库操作对象|modules.oData|封装了Bmob的大多数api，以供开发者进行快速的业务逻辑开发，详见下文 `<Bmob数据操作>`
-日志输出对象|modules.oLog|提供了几个级别的日志输出，以便调试，详见下文 `<日志输出>`
+Bmob数据库操作|modules.oData|封装了Bmob的大多数api，以供开发者进行快速的业务逻辑开发，详见下文 `<Bmob数据操作>`
+内存操作|modules.oMemory|提供了一定内存空间给开发者快速读写，详见下文 `<内存操作>`
+日志输出|modules.oLog|提供了几个级别的日志输出，以便调试，详见下文 `<日志输出>`
+微信接口|modules.oWechat|目前提供了几个方法，用于小程序客服交互，详见下文 `<微信接口>`
 
 #### Bmob数据操作
 
@@ -323,7 +325,6 @@ batch(JSONArray requests)|HttpResponse|批量请求
 		
 					
 
-
 #### 日志输出
 
 
@@ -344,7 +345,34 @@ batch(JSONArray requests)|HttpResponse|批量请求
 		modules.oLog.debug(String,Object...) // 格式化输出Debug级别日志
 		modules.oLog.warn(String,Object...) // 格式化输出Warn级别日志
 		modules.oLog.error(String,Object...) // 格式化输出Error级别日志
+		
 
+#### 微信接口
+
+- 推荐将小程序的appid、app secret在Bmob后台设置，由Bmob进行AccessToken的生命周期管理
+- 以下均为 `modules.oMemory` 的方法
+
+		// 设置当前的AccessToken
+		setAccessToken(String)
+		
+		// 设置小程序的key，不推荐调用，推荐在Bmob后台设置
+		initWechatApp(String appId, String appSecret)
+		
+		// 获取当前的AccessToken
+		// 如果通过调用initWechatApp方法设置了小程序参数，则直接从微信接口获取，请注意自行保存并管理有效期，以避免频繁获取
+		// 如果未调用initWechatApp，则从Bmob平台获取
+		getAccessToken()
+		getAccessToken(boolean useCache) // 参数为false时不使用缓存
+		
+		// 发送消息给小程序的用户
+		// type可以为text、image、link
+		// msg为String或JSON，请参考Demo和微信官方文档
+		sendWechatAppMsg(String openId, String type, Object msg)
+
+		// 判断是否从微信发送的请求
+		// 实际上就是封装了判断signature是否等于SHA1(sort(timestamp,nonce,token))
+		isWechatRequest(String token, Request request)
+		
 
 ## 内置类
 		
@@ -399,6 +427,14 @@ addWhereLessThanOrEqualTo(String,Object)|某字段小于等于
 addWhereRelatedTo(String table,toObjId,toKey)|在某表作为Relation关联起来的数据
 addWhereNear(String,BmobGeoPoint,double maxMiles, double maxKM, double maxRadians)|地理位置在一定范围内
 addWhereWithinGeoBox(String,BmobGeoPoint,BmobGeoPoint)|地理位置在矩形范围内
+count(int)|统计接口: 返回数量
+groupby(String)|统计接口: 根据某列分组
+groupcount(boolean)|统计接口: 分组后组内统计数量
+sum(String)|统计接口: 计算总数
+average(String)|统计接口: 计算平均数
+max(String)|统计接口: 获取最大值
+min(String)|统计接口: 获取最小值
+having|统计接口: 分组中的过滤条件
 
 ### BmobUpdater
 
@@ -585,11 +621,16 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 
 ### RSA
 
+请注意，别忘了要写类的全称，例如 `java.security.PrivateKey`，否则编译失败
+
 静态方法：
 
-		KeyPair GenerateKeys()
-		KeyPair RestoreKeys(byte[] keyBytes)
-		PublicKey ParsePublicKey(byte[] keyBytes)
+		java.security.KeyPair GenerateKeys()
+		java.security.PrivateKey ParsePrivateKey(byte[] keyBytes)
+		java.security.PublicKey ParsePublicKey(byte[] keyBytes)
+		
+		// 下面4个方法，都可以再添加一个String参数，传入算法
+		// 默认的算法为：加解密[RSA/ECB/PKCS1Padding], 签名[SHA1WithRSA]
 		byte[] Encode(PublicKey pubKey, byte[] content)
 		byte[] Decode(PrivateKey priKey, byte[] content)
 		byte[] Sign(PrivateKey priKey, byte[] content)
@@ -604,8 +645,6 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 		String Encode(byte[] bytes)
 		byte[] EncodeToBytes(byte[] bytes)
 
-
-	
 
 ## 内置方法
 
