@@ -350,7 +350,7 @@ batch(JSONArray requests)|HttpResponse|批量请求
 #### 微信接口
 
 - 推荐将小程序的appid、app secret在Bmob后台设置，由Bmob进行AccessToken的生命周期管理
-- 以下均为 `modules.oMemory` 的方法
+- 以下均为 `modules.oWechat` 的方法
 
 		// 设置当前的AccessToken
 		setAccessToken(String)
