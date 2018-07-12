@@ -592,6 +592,36 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 		String Encode(byte[] data)
 		byte[] Decode(String str)
 
+### Email
+
+构造方法：
+
+```
+		// host: 邮件服务商的地址，例如qq邮箱为smtp.qq.com
+		// port: 邮件服务商的端口号，例如qq邮箱为465
+		// email: 用于发送邮件的邮箱地址
+		// password: 邮箱密码，请注意很多邮件服务商不允许直接使用登陆密码，需要另外申请
+		Email(String host, int port, String email, String password)
+```
+
+### 类变量
+
+```
+		// 修改邮件的发送方名称
+		String username
+```
+
+### 类方法
+
+```
+		// email: 接受方的邮件地址
+		// title: 邮件标题
+		// body: 邮件内容
+		// 返回值的jsonData.getIntValue("code") == 200时为发送成功
+		HttpResponse send(String email, String title, String body)
+```
+
+
 ### Crypto
 
 静态方法：
