@@ -17,7 +17,7 @@ Http请求|Secret Key|所有平台适用，可用浏览器打开
 
 
 ### Restful API
-	
+
 1. 调用 `api.bmob.cn` ，与调用NodeJS版云函数的方式 **完全相同**。这种方式下，服务器会 **自动判断语言**，但 **限制 `Method` 为 `Post` 且 `Content-Type` 为 `application/json`**
 
 2. 调用 `javacloud.bmob.cn` ，调用方式基本相同，这种方式 **仅可调用Java云函数**，但 **不限制 `Method` 和 `Content-Type`**
@@ -36,7 +36,7 @@ Http请求|Secret Key|所有平台适用，可用浏览器打开
 		    -H "X-Bmob-REST-API-Key: Your REST API Key" \
 		    -d '[body]' \
 		    https://javacloud.bmob.cn/1/functions/[function name]
-
+	
 		// 使用Master Key请求
 		curl -X [method] \
 		    -H "X-Bmob-Master-Key: Your Master Key" \
@@ -53,7 +53,6 @@ Http请求|Secret Key|所有平台适用，可用浏览器打开
 		
 		// 或者直接用浏览器打开，即GET请求
 	    https://javacloud.bmob.cn/[sectet key]/[function name]?k1=v1&k2=v2
-
 
 ---
 
@@ -73,7 +72,7 @@ Http请求|Secret Key|所有平台适用，可用浏览器打开
 		});
 
 ### 微信小程序
-			
+
 		Bmob.Cloud.run('test', {'name': 'zwr'}).then(function (result) {
 			console.log("Succeed: ");
 			console.log(result);
@@ -112,9 +111,9 @@ Http请求|Secret Key|所有平台适用，可用浏览器打开
 
 		$cloudCode = new BmobCloudCode('test'); //调用名字为test的云函数
 		$res = $cloudCode->get(array("name"=>"zwr")); //传入参数name，其值为zwr
-		
+
 ### JavaScript
-		
+
 		Bmob.Cloud.run('test', {"name":"tom"}, {
 			success: function(result) {
 				console.log("Succeed: ");
@@ -142,15 +141,14 @@ Http请求|Secret Key|所有平台适用，可用浏览器打开
 		// 这里使用Java编写云函数
 		// 最后一个字符必须是 }
 		}
-		
+	
 - 代码不能包含以下关键字：(保存代码时有错误提醒)
 
-		Class
-		File
-		System
-		...
+   Class
+   	File
+   	System
+   	...
 
-		
 - 需要获取当前毫秒时，可用 `getTime()` 、`new java.util.Date().getTime()` 替代 `System.currentTimeMillis()`
 - 如果确实需要用到被禁止使用的关键字，例如查询"File"表，可用"F"+"ile"的形式拼接
 - 不可包含`/**/`注释，如需注释，请用 `//`
@@ -169,7 +167,7 @@ Github页面如下：
 - `doc目录` 下提供了文档
 
 ## 方法参数
-		
+
 ### Request对象
 
 onRequest方法参数中 `Request request` 包含了本次请求的全部信息：
@@ -282,48 +280,49 @@ batch(JSONArray requests)|HttpResponse|批量请求
 - 下面的方法除 `clean` 之外，分为 `当作byte数组` 和 `当作Map` 使用两种方式，这两种方式 **不能混用** ，如果你的应用选择将内存转为Map类型使用，就不能再用byte数组类型的接口操作内存，否则会出现异常
 - 以下均为 `modules.oMemory` 的方法
 
-		// 把内存当作byte数组使用，往内存写byte数组
-		// buff: 写入内容
-		// buffOffset: 写入内容内偏移值
-		// memoryOffset: 内存偏移值
-		// length: 写入长度
-		// return 是否写入成功(超出授予的内存大小，即返回失败)
-		public native boolean write(byte[] buff, int buffOffset, int memoryOffset,
-				int length);
-				
-		// 把内存当作byte数组使用，读取内存
-		public native boolean read(byte[] buff, int memoryOffset, int buffOffset,
-				int length);
-				
-		// 把内存当作byte数组使用，读取内存
-		// return 越界时返回null，没有写入过返回 new byte[length]
-		public native byte[] read(int memoryOffset, int length);
-		
-		// 清理内存
-		public native void clean();
-		
-		// 把内存当作Map类型操作，写入键值对
-		public native boolean putMap(String key, Serializable value);
-		
-		// 把内存当作Map类型操作，写入追加Map
-		public native boolean putMap(Map<String, Serializable> kvs);
-		
-		// 把内存当作Map类型操作，获取一个值
-		public native <T extends Serializable> T getMap(String key);
-		
-		// 把内存当作Map类型操作，覆盖写入Map
-		public native boolean writeMap(Map<String, Serializable> kvs);
-		
-		// 把内存当作Map类型操作，读取整个Map
-		public native Map<String, Serializable> readMap();
-		
-		// 把内存当作Map类型操作, 写入一个byte
-		public native boolean writeByte(int index, byte b);
-		
-		// 把内存当作Map类型操作, 读取一个byte
-		public native byte readByte(int index);
-		
-					
+   // 把内存当作byte数组使用，往内存写byte数组
+   	// buff: 写入内容
+   	// buffOffset: 写入内容内偏移值
+   	// memoryOffset: 内存偏移值
+   	// length: 写入长度
+   	// return 是否写入成功(超出授予的内存大小，即返回失败)
+   	public native boolean write(byte[] buff, int buffOffset, int memoryOffset,
+   			int length);
+   			
+   	// 把内存当作byte数组使用，读取内存
+   	public native boolean read(byte[] buff, int memoryOffset, int buffOffset,
+   			int length);
+   			
+   	// 把内存当作byte数组使用，读取内存
+   	// return 越界时返回null，没有写入过返回 new byte[length]
+   	public native byte[] read(int memoryOffset, int length);
+   	
+   	// 清理内存
+   	public native void clean();
+   	
+   	// 把内存当作Map类型操作，写入键值对
+   	public native boolean putMap(String key, Serializable value);
+   	
+   	// 把内存当作Map类型操作，写入追加Map
+   	public native boolean putMap(Map<String, Serializable> kvs);
+   	
+   	// 把内存当作Map类型操作，获取一个值
+   	public native <T extends Serializable> T getMap(String key);
+   	
+   	// 把内存当作Map类型操作，覆盖写入Map
+   	public native boolean writeMap(Map<String, Serializable> kvs);
+   	
+   	// 把内存当作Map类型操作，读取整个Map
+   	public native Map<String, Serializable> readMap();
+   	
+   	// 把内存当作Map类型操作, 写入一个byte
+   	public native boolean writeByte(int index, byte b);
+   	
+   	// 把内存当作Map类型操作, 读取一个byte
+   	public native byte readByte(int index);
+
+
+   ​				
 
 #### 日志输出
 
@@ -345,7 +344,7 @@ batch(JSONArray requests)|HttpResponse|批量请求
 		modules.oLog.debug(String,Object...) // 格式化输出Debug级别日志
 		modules.oLog.warn(String,Object...) // 格式化输出Warn级别日志
 		modules.oLog.error(String,Object...) // 格式化输出Error级别日志
-		
+
 
 #### 微信接口
 
@@ -368,14 +367,14 @@ batch(JSONArray requests)|HttpResponse|批量请求
 		// type可以为text、image、link
 		// msg为String或JSON，请参考Demo和微信官方文档
 		sendWechatAppMsg(String openId, String type, Object msg)
-
+	
 		// 判断是否从微信发送的请求
 		// 实际上就是封装了判断signature是否等于SHA1(sort(timestamp,nonce,token))
 		isWechatRequest(String token, Request request)
-		
+	
 
 ## 内置类
-		
+
 ### HttpResponse
 
 **类变量**:
@@ -427,6 +426,21 @@ addWhereLessThanOrEqualTo(String,Object)|某字段小于等于
 addWhereRelatedTo(String table,toObjId,toKey)|在某表作为Relation关联起来的数据
 addWhereNear(String,BmobGeoPoint,double maxMiles, double maxKM, double maxRadians)|地理位置在一定范围内
 addWhereWithinGeoBox(String,BmobGeoPoint,BmobGeoPoint)|地理位置在矩形范围内
+addWhereContainedIn(String key, Object... objs)|值在列表内
+addWhereContainedInArray(String key,JSONArray arr)|值在列表内
+addWhereNotContainedIn(String key,Object... objs)|值不在列表内
+addWhereNotContainedInArray(String key,JSONArray arr)|值不在列表内
+addWhereContainsAll(String key, Object... objs)|列表包含全部项
+addWhereContainsAllInArray(String key,JSONArray arr)|列表包含全部项
+addWhereStrContains(String key, String keyWord)|String类型模糊查询
+addWhereMatchesQuery(String key,JSONObject innerQuery, String innerKey)|某项符合子查询
+addWhereDoesNotMatchQuery(String key,JSONObject innerQuery, String innerKey)|某项不符合子查询
+addWhereMatchesQuery(String key,Querier innerQuery, String innerKey)|某项符合子查询
+addWhereDoesNotMatchQuery(String key,Querier innerQuery, String innerKey)|某项不符合子查询
+addWhereInQuery(String key, JSONObject inQuery)|某项包含在子查询
+addWhereNotInQuery(String key,JSONObject inQuery)|某项不包含在子查询
+addWhereInQuery(String key, Querier querier)|某项包含在子查询
+addWhereNotInQuery(String key, Querier querier)|某项不包含在子查询
 count(int)|统计接口: 返回数量
 groupby(String)|统计接口: 根据某列分组
 groupcount(boolean)|统计接口: 分组后组内统计数量
@@ -467,7 +481,9 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 		JSONArray toArray(Object... objs)
 		JSONObject strsToJson(String... kNvs)
 		JSONObject toJson(Object... kNvs)
-		
+		boolean sort(List array, String keys)
+		boolean clean(Map json, String rules);
+
 
 ### JSONObject
 
@@ -569,6 +585,10 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 
 		BmobGeoPoint(double longitude, double latitude)
 
+静态方法：
+
+		double CalcuDistance(double lat1, double lng1, double lat2, double lng2)
+
 ### AES
 
 静态方法：
@@ -596,30 +616,27 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 
 构造方法：
 
-```
 		// host: 邮件服务商的地址，例如qq邮箱为smtp.qq.com
 		// port: 邮件服务商的端口号，例如qq邮箱为465
 		// email: 用于发送邮件的邮箱地址
 		// password: 邮箱密码，请注意很多邮件服务商不允许直接使用登陆密码，需要另外申请
 		Email(String host, int port, String email, String password)
-```
+		
 
 ### 类变量
 
-```
+
 		// 修改邮件的发送方名称
 		String username
-```
+		
 
 ### 类方法
 
-```
 		// email: 接受方的邮件地址
 		// title: 邮件标题
 		// body: 邮件内容
 		// 返回值的jsonData.getIntValue("code") == 200时为发送成功
 		HttpResponse send(String email, String title, String body)
-```
 
 
 ### Crypto
@@ -631,7 +648,7 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 		byte[] EncodeToBytes(String algorithm, byte[] bytes)
 		String Bytes2Hex(byte bytes[])
 		String Bytes2Hex(byte bytes[], int offset, int length)
-		
+
 
 ### GZip
 
@@ -639,7 +656,7 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 
 		byte[] Decode(byte[] bytes)
 		byte[] Encode(byte[] bytes)
-		
+
 
 ### MD5
 
@@ -685,8 +702,9 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 		JSONArray JSON.parseArray(String) // String转JSONArray
 		boolean isStrEmpty(String) // 判断字符串是否为空
 		arraycopy(Object from, int fromOffset, Object to, int toOffset, int length) // 复制数组内容
-	
-				
+
+
+​				
 ## 示例
 
 案例主要放在了Github: **[Bmob云函数案例](https://github.com/bmob/BmobJavaCloud/tree/master/samples)**
@@ -694,34 +712,33 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 
 
 - **场景1**:
-	
-	用户在app提交了反馈，参数有"userObjectId"、"title"、"content"、"type"，需要保存到FeedBack表
 
-		JSONObject params = request.getParams();
-		String title = params.getString("title");
-		String content = params.getString("content");
-		String userId = params.getString("userObjectId");
-		int type = params.getIntValue("type");
+  用户在app提交了反馈，参数有"userObjectId"、"title"、"content"、"type"，需要保存到FeedBack表
 
-		JSONObject data = JSON.toJson(
-			"title", title,
-			"content", content,
-			"type", type
-		);
-		BmobUpdater.add(
-			data,
-			"user",
-			new BmobPointer("_User", userId)
-		);
-		
-		response.send(
-			modules.oData.insert(
-				"Feedback",
-				data
-			).stringData
-		);
+  	JSONObject params = request.getParams();
+  	String title = params.getString("title");
+  	String content = params.getString("content");
+  	String userId = params.getString("userObjectId");
+  	int type = params.getIntValue("type");
+  	
+  	JSONObject data = JSON.toJson(
+  		"title", title,
+  		"content", content,
+  		"type", type
+  	);
+  	BmobUpdater.add(
+  		data,
+  		"user",
+  		new BmobPointer("_User", userId)
+  	);
+  	
+  	response.send(
+  		modules.oData.insert(
+  			"Feedback",
+  			data
+  		).stringData
+  	);
 
-		
 - **场景2**:
 
 	查询Feedback表中，type为1、title字段不为空，且创建时间在12小时以内的最新10条数据，并只需要反馈content和对应user的用户名
@@ -767,6 +784,6 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 		1.修改客户端代码，降低请求频率
 		2.修改云函数，提高代码质量和效率，减少网络请求相关的超时时长，尽快结束工作
 		3.购买更高的并发配置
-		
+	
 - 如果需要接受更大的请求体，或返回更大的结果，请购买更高的配置
 - 如果你用 `eclipse` 等IDE开发，使用 [同步工具](https://github.com/bmob/BmobJavaCloud/tree/master/exec) 是一个不错的选择
