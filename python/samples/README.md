@@ -6,4 +6,4 @@
 :----:|:----:|:----:|:----:
 helloworld.py|入门|response对象|[测试](https://pycloud.bmob.cn/f7693b7e98a35ed6/helloworld)
 req.py|获取请求信息|request对象|[测试](https://pycloud.bmob.cn/f7693b7e98a35ed6/req)
-users.py|查询用户列表|modules对象|[测试](https://pycloud.bmob.cn/f7693b7e98a35ed6/users)
+bmob.py|查询用户列表|modules对象|[测试](https://pycloud.bmob.cn/f7693b7e98a35ed6/bmob)
