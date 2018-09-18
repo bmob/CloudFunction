@@ -7,13 +7,29 @@
 
 ## 调用方法
 
-云函数提供了以下几种方式提供调用：
+- 前提是需要在 [https://www.bmob.cn](https://www.bmob.cn) 注册账号、创建应用
+
+Python云函数允许以以下方式调用：
+
+- Http直接请求
+- Restful接口
+- Android SDK
+- iOS SDK、
+- 微信小程序
+- 微信小游戏
+- C# SDK
+- 快应用
+- PHP SDK
+- JavaScript
+- ...
+
 
 调用方式|所需信息|优点
 :----:|:----:|:----:
 SDK|AppId|交互自带加密,接入快速
 RestApi|AppId、RestKey|所有平台适用，通用性强
 Http请求|Secret Key|所有平台适用，可用浏览器打开
+
 
 
 ### Restful API
@@ -150,7 +166,6 @@ Github页面如下：
 
 - `exec目录` 下提供了 `macos`、`linux`、`windows 64位`等平台的`可执行文件`，以供开发者快速进行代码的上传、修改、同步到本地和删除
 - `samples目录` 提供了案例
-- `doc目录` 下提供了文档
 
 
 ## 代码规范
