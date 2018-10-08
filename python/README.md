@@ -260,13 +260,19 @@ Bmob数据库操作|modules.oData|封装了Bmob的大多数api，以供开发者
 
 方法体|返回值|描述
 :----:|:----:|:----:
-setUserSession(String)|self|设置用户的Session Token
-setMasterKey(String)|self|设置应用的Master Key
+setUserSession(session)|self|设置用户的Session Token
+setMasterKey(masterKey)|self|设置应用的Master Key
 insert(className, data)|HttpResponse|往数据表中添加一行
 remove(className, objectId)|HttpResponse|删除数据表中的一行
 update(className, objectId, data)|HttpResponse|更新数据表中的一行
 find|HttpResponse|使用查询器查询数据，详细参数见下方
 findOne(className, objectId)|HttpResponse|查询数据表中的一行
+userSignUp(userData)|HttpResponse|用户注册
+userLogin(username, password)|HttpResponse|用户通过账号、密码登陆
+userLoginBySMS(mobile, smsCode, userInfo)|HttpResponse|用户通过短信验证码一键注册或登录
+userResetPasswordByEmail(email)|HttpResponse|用户请求Email重置密码
+userResetPasswordBySMS(smsCode, password)|HttpResponse|用户通过短信验证码重置密码
+userResetPasswordByPWD(userId,session,oldPassword,newPassword)|HttpResponse|用户通过旧密码修改新密码
 sendCustomSMS(mobile, content)|HttpResponse|发送自定义短信
 sendSMSCode(mobile, template)|HttpResponse|发送某模版的短信验证码
 verifySMSCode(mobile, smsCode)|HttpResponse|验证短信验证码
