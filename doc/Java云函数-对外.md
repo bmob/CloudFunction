@@ -49,10 +49,14 @@ Http请求|Secret Key|所有平台适用，可用浏览器打开
 		curl -X [method] \
 		    -H "header key: header value" \
 		    -d '[body]' \
-		    https://javacloud.bmob.cn/[sectet key]/[function name]
+		    https://javacloud.bmob.cn/[secret key]/[function name]
 		
 		// 或者直接用浏览器打开，即GET请求
-	    https://javacloud.bmob.cn/[sectet key]/[function name]?k1=v1&k2=v2
+	    https://javacloud.bmob.cn/[secret key]/[function name]?k1=v1&k2=v2
+
+	    // 当直接进入 https://javacloud.bmob.cn/[secret key] 时，会触发 index 方法
+	    // 当 function name 不存在是，会触发 notfound 方法
+
 
 ---
 
@@ -186,7 +190,7 @@ Body内参数|JSONObject|request.getParams()|{"username": "zwr"}
 ### Response对象
 
 - onRequest方法参数中 `Response response` 用于响应请求，返回数据
-- Response对象仅有名为 `send` 的方法，参数不同共有4种重载形式(Overloading):
+- Response对象主要内容是 `send` 方法，参数不同共有4种重载形式(Overloading):
 
 1. send(Object res)
 2. send(Object res, int statusCode)
@@ -216,6 +220,24 @@ headers|JSONObject|返回的头部信息，采用String-String的格式，例如
 			JSON.toJson("Content-Type", "text/plain; charset=UTF-8")
 		);
 
+---
+
+181206更新：
+
+支持响应跨域请求
+
+```
+// 在send方法被调用之前调用
+response.setAllowCross(
+	boolean isAllow,
+	String host,
+	String contentType, 
+	String[] methods, 
+	String[] allowHeaders,
+	String[] exposeHeaders
+);
+```
+
 
 ### Modules对象
 
@@ -226,6 +248,9 @@ headers|JSONObject|返回的头部信息，采用String-String的格式，例如
 Bmob数据库操作|modules.oData|封装了Bmob的大多数api，以供开发者进行快速的业务逻辑开发，详见下文 `<Bmob数据操作>`
 内存操作|modules.oMemory|提供了一定内存空间给开发者快速读写，详见下文 `<内存操作>`
 日志输出|modules.oLog|提供了几个级别的日志输出，以便调试，详见下文 `<日志输出>`
+持久化操作|modules.oPersistence|利用系统IO进行数据持久层操作，可用于静态网页，详见下文`<持久化>`
+Http请求|modules.oHttp|发起http的各种请求，如POST、GET等，详见下文`<Http请求>`
+游戏平台操作|modules.oGame|从云函数对Bmob Game SDK进行房间、玩家管理，详见下文`<游戏平台操作>`
 微信接口|modules.oWechat|目前提供了几个方法，用于小程序客服交互，详见下文 `<微信接口>`
 
 #### Bmob数据操作
@@ -344,6 +369,133 @@ batch(JSONArray requests)|HttpResponse|批量请求
 		modules.oLog.debug(String,Object...) // 格式化输出Debug级别日志
 		modules.oLog.warn(String,Object...) // 格式化输出Warn级别日志
 		modules.oLog.error(String,Object...) // 格式化输出Error级别日志
+
+### 持久化 
+
+*请注意，此处的持久化不同于利用Bmob数据库，是一种非可靠的、利用系统IO实现的数据持久化管理*
+
+*在不同负载环境下，或使用超出额度时，均可能会造成数据被清空*
+
+*利用该模块，你可以轻松实现前端代码的部署，例如单页h5应用、vue项目等，且不会造成数据库api数的增加*
+
+`modules.oPersistence` 只有两个方法:
+
+```
+// 获取一个持久化项
+// 参数为路径，举例：
+// ("index.html")
+// ("web/html/index.html")
+// ("web","html","index.html")
+// ("web","html/js","index.js")
+// 返回 PersistenceItem 对象，可进行IO操作，返回null说明发生错误，可能是额度达到上限或路径非法
+
+PersistenceItem modules.oPersistence.get(...)
+
+
+// 获取持久化的结构
+JSONObject modules.oPersistence.getStruct()
+/* 返回值举例：
+	{	
+		"index.html": 123, // 项对应的是length
+		"web": { // 层级对应的是Object
+			"html": {
+				"index.html": 456
+			},
+			"js": {
+				"index.js": 789
+			},
+			"config": 123
+		}
+	}
+*/
+```
+
+**PersistenceItem**
+
+可进行持久化操作的项，可进行读、写、删除、获取空间大小等
+
+方法:
+
+```
+// 获取大小
+long size();
+
+// 写入
+boolean write(byte[] data)
+
+// 写入，是否追加
+boolean write(byte[] data, boolean append); 
+
+// 读取
+public final native boolean read(byte[] buff);
+
+// 读取，跳过字节数
+public final native boolean read(byte[] buff, long skip);
+
+// 删除该项
+public final native boolean delete();
+
+// 此外还即将开发：zip/unzip操作
+
+```
+
+
+*目前云函数普通用户有以下限制：20个持久化项、单项大小不超过10Mb、总大小不超过10Mb、每次云函数执行周期内可读写各1次*
+
+*如需提高以上额度或取消限制，请联系官方客服*
+
+
+### Http请求
+
+以下均为`modules.oHttp`对象的方法
+
+
+```
+// get请求一个网址
+HttpResponse get(String url);
+  
+// post发起一次请求
+HttpResponse post(String url, String contentType, byte[] data);
+  
+// post发起Json请求
+HttpResponse post(String url, JSONObject jsonData);
+  
+// post发起Form请求
+HttpResponse post(String url, Map<String, String> formData);
+  
+// 发起任意http请求
+HttpResponse request(String url, String method, JSONObject headers, byte[] data, int timeout);
+```
+
+
+*目前云函数普通用户有以下限制：每次云函数执行周期内可进行1次请求*
+
+*如需提高以上额度或取消限制，请联系官方客服*
+
+
+### 游戏平台操作
+
+**该模块用于配合 [Bmob游戏SDK](https://game.bmob.cn) 使用，可执行例如定期清理房间、踢出玩家、获取游戏参数等操作**
+
+以下均为`modules.oGame`对象的方法
+
+
+```
+// 初始化
+init(String bgsId, int version);
+  
+// 创建房间
+HttpResponse createRoom(String hostUserId, int playerCount);
+  
+// 销毁房间
+HttpResponse destroyRoom(String hostUserId, String slaveAddress, int roomId, String roomMasterKey);
+  
+// 踢出玩家
+HttpResponse kick(String hostUserId, String slaveAddress, int roomId, String roomMasterKey, int kickingPlayerNo);
+  
+// 获取游戏配置
+HttpResponse getConf();
+```
 
 
 #### 微信接口
@@ -787,3 +939,38 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 	
 - 如果需要接受更大的请求体，或返回更大的结果，请购买更高的配置
 - 如果你用 `eclipse` 等IDE开发，使用 [同步工具](https://github.com/bmob/BmobJavaCloud/tree/master/exec) 是一个不错的选择
+
+
+
+## 更新纪录
+
+### 181206
+
+1. 持久化层操作 **modules.oPersistence**
+2. 开放对外http请求 **modules.oHttp**
+3. 增加游戏sdk对接方法 **modules.oGame**
+4. 支持 **index**、**notfound** 请求
+5. 支持响应跨域请求 **response.setAllowCross**
+
+
+第4点着重强调一下：
+
+通过http直接访问云函数时(例如浏览器打开)，可通过
+[https://javacloud.bmob.cn/f7693b7e98a35ed6/helloworld](https://javacloud.bmob.cn/f7693b7e98a35ed6/helloworld)
+访问 Secret Key 为 `f7693b7e98a35ed6` 的应用的 `helloworld` 云函数
+
+- 如果你未曾创建名为 `helloworld` 的云函数，会自动触发到 **notfound** 云函数
+
+例如
+[https://javacloud.bmob.cn/f7693b7e98a35ed6/xxxxxx](https://javacloud.bmob.cn/f7693b7e98a35ed6/xxxxxx)
+或
+[https://javacloud.bmob.cn/f7693b7e98a35ed6](https://javacloud.bmob.cn/f7693b7e98a35ed6)
+会显示 *You miss your way?*
+
+- 如果你直接进入 [https://javacloud.bmob.cn/f7693b7e98a35ed6/](https://javacloud.bmob.cn/f7693b7e98a35ed6/)
+(请注意与1的区别：结尾**有斜杠**)
+也就是未指定任何云函数名时，会触发 **index** 云函数
+
+聪明的你可以通过创建这两个云函数，将你的web前端页面显示出来，也可以配合 `response.send` 发送 `301`、`302` 重定向到真正需要的地址
+
+
