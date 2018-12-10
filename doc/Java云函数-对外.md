@@ -435,7 +435,13 @@ public final native boolean read(byte[] buff, long skip);
 // 删除该项
 public final native boolean delete();
 
-// 此外还即将开发：zip/unzip操作
+// 将zip文件内容解压到持久化空间
+public final native boolean unzip(byte[] data);
+public final native boolean unzip(java.io.InputStream is);
+
+// 将持久化空间的所有文件打包成zip文件
+public final native byte[] zip();
+public final native boolean zip(java.io.OutputStream os);
 
 ```
 
@@ -973,4 +979,8 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 
 聪明的你可以通过创建这两个云函数，将你的web前端页面显示出来，也可以配合 `response.send` 发送 `301`、`302` 重定向到真正需要的地址
 
+
+### 181210
+
+持久化层，支持zip、unzip操作，可以用于将vue等前端项目的更新
 
