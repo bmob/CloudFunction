@@ -37,8 +37,4 @@
 - 如果对目录结构、更新文件有兴趣，请详细阅读[NotFound示例](//github.com/bmob/CloudFunction/tree/master/vue/NotFound.java)中的代码
 - 如果Vue项目较为大型，可联系客服升级云函数配置
 - Vue示例代码来自[PanJiaChen/vue-admin-template](//github.com/PanJiaChen/vue-admin-template)，感谢作者的无私奉献
-<<<<<<< HEAD
 - 该功能尚在测试阶段，如果需要正式上线或用自己的域名，请联系客服
-=======
-- 该功能尚在测试阶段，如果需要正式上线或用自己的域名，请联系客服
->>>>>>> origin/master
