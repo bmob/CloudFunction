@@ -2,6 +2,8 @@
 
 *只需要云函数服务，就可以一键部署你的Vue项目*
 
+*请注意，该功能的目的并非专用于Vue项目，而是对延伸Java云函数功能的一种展示。更多的是希望帮助开发者理解Java云函数的使用。工作原理可以参考[NotFound示例](//github.com/bmob/CloudFunction/tree/master/vue/NotFound.java)的源码*
+
 [示例网站](//javacloud.bmob.cn/f7693b7e98a35ed6)
 
 ## 发布步骤
@@ -11,7 +13,7 @@
 
 1. 编写Vue项目
 
-2. 修改 `config/index.js` 的 `assetsPublicPath` 为 *./* （默认为 `/`）
+2. 修改 `config/index.js` 的 `assetsPublicPath` 为 `./` （默认为 `/`）
 
 3. `npm run build`
 
@@ -27,7 +29,7 @@
 
 9. 在Bmob数据库创建表，名为`WebProject`，并新建字段`version`(Number类型)、`project`(File类型)
 
-10. 新增一行WebProkect数据，`version`为1，`project`点击上传步骤6生成的zip文件
+10. 新增一行WebProject数据，`version`为1，`project`点击上传步骤6生成的zip文件
 
 11. 打开 `https://javacloud.bmob.cn/[secret key]` 即可看到你的Vue项目(secret key从bmob后台查看)
 
