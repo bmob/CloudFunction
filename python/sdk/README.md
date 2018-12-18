@@ -35,7 +35,7 @@ sendSMSCode(mobile, template)|HttpResponse|发送某模版的短信验证码
 verifySMSCode(mobile, smsCode)|HttpResponse|验证短信验证码
 payQuery(orderId)|HttpResponse|查询支付订单
 cloudCode(funcName, body = None)|HttpResponse|调用云函数
-getDBTime()|获取Restful服务器的时间
+getDBTime()|HttpResponse|获取Restful服务器的时间
 batch(requests, isTransaction = None)|HttpResponse|批量请求
 
 ---
@@ -174,6 +174,7 @@ BmobGeoPoint(longitude, latitude)
 - 需要兼容python其它版本，或改用其它http库，修改 `httpRequest` 方法
 - SDK只有短短300多行，基本上是对 [Restful API](http://doc.bmob.cn/data/restful/develop_doc/) 的封装，如果需要添加接口，参照该文档即可
 - [Python云函数](https://github.com/bmob/CloudFunction/tree/master/python) 运行于云端，可用于编写更安全、更灵活的服务端逻辑
+- 通过ImportError区分了python2和python3，可自行修改
 
 
 ## Demo

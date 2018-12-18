@@ -1,9 +1,14 @@
 #coding=utf-8
 
-from urllib import quote
 import json
-import urllib2 as import_urllib
 import time
+
+try:
+	from urllib import quote
+	import urllib2 as import_urllib
+except ImportError:
+	from urllib.parse import quote
+	import urllib.request as import_urllib
 
 class BmobObject:
 	def __init__(self, type):
@@ -22,11 +27,11 @@ class BmobFile(BmobObject):
 		self.__dict__["filename"] = filename
 		
 class BmobDate(BmobObject):
-	def __init__(self, time):
+	def __init__(self, timestamp):
 		BmobObject.__init__(self, "Date")
-		if type(time) == float or type(time) == int:
-			time = __time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time / 1000))
-		self.__dict__["iso"] = time
+		if type(timestamp) == float or type(timestamp) == int:
+			timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp / 1000))
+		self.__dict__["iso"] = timestamp
 		
 class BmobGeoPoint(BmobObject):
 	def __init__(self, latitude, longitude):
@@ -215,13 +220,15 @@ class HttpResponse:
 def httpRequest(url, method = 'GET', headers = None, body = None, timeout = 10):
 	if headers == None:
 		headers = {}
+	if body != None:
+		body = body.encode("utf-8")
 	req = import_urllib.Request(url=url, data=body, headers=headers)
 	if method != None:
 		req.get_method = lambda: method
 	try:
 		res = import_urllib.urlopen(req, timeout=timeout)
 		return HttpResponse(res.code, res.msg, res.headers, res.read())
-	except import_urllib.URLError, e:
+	except import_urllib.URLError as e:
 		try:
 			if hasattr(e, "reason"):
 				reason = e.reason
@@ -340,7 +347,7 @@ class Bmob:
 				if len(params) != 0:
 					url += '?' + params[1:]
 			return httpRequest(url = url, method = 'GET', headers = self.headers)
-		except Exception, e:
+		except Exception as e:
 			print(repr(e))
 			msg = 'Bad Query'
 			return HttpResponse(-1, msg, None, msg, msg)

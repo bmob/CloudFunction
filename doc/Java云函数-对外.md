@@ -446,7 +446,7 @@ public final native boolean zip(java.io.OutputStream os);
 ```
 
 
-*目前云函数普通用户有以下限制：20个持久化项、单项大小不超过10Mb、总大小不超过10Mb、每次云函数执行周期内可读写各1次*
+*目前云函数普通用户有以下限制：50个持久化项、单项大小不超过10Mb、总大小不超过10Mb、每次云函数执行周期内可读写各1次*
 
 *如需提高以上额度或取消限制，请联系官方客服*
 
@@ -948,7 +948,7 @@ removeRelations(JSONObject data, String key,BmobPointer...pointers)|移除多个
 
 
 
-## 更新纪录
+## 更新记录
 
 ### 181206
 
