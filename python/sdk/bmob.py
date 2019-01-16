@@ -39,6 +39,9 @@ class BmobGeoPoint(BmobObject):
 		self.__dict__["latitude"] = latitude
 		self.__dict__["longitude"] = longitude
 
+def def_marshal(obj):
+	return obj.__dict__
+
 class BmobUpdater:
 	@staticmethod
 	def add(key, value, data = None):
@@ -258,7 +261,7 @@ class Bmob:
 
 	# About user start
 	def userSignUp(self, userInfo):
-		return httpRequest(url = self.domain + '/1/users', method = 'POST', headers = self.headers, body = json.dumps(userInfo))
+		return httpRequest(url = self.domain + '/1/users', method = 'POST', headers = self.headers, body = json.dumps(userInfo, default=def_marshal))
 	def userLogin(self, username, password):
 		return httpRequest(url = self.domain + '/1/login?username=' + quote(username) + '&password=' + quote(password), method = 'GET', headers = self.headers)
 	def userLoginBySMS(self, mobile, smsCode, userInfo):
@@ -284,7 +287,7 @@ class Bmob:
 	def cloudCode(self, funcName, body = None):
 		if body == None:
 			body = {}
-		return httpRequest(url = self.domain + '/1/functions/' + funcName, method = 'POST', headers = self.headers, body = json.dumps(body))
+		return httpRequest(url = self.domain + '/1/functions/' + funcName, method = 'POST', headers = self.headers, body = json.dumps(body, default=def_marshal))
 	def getDBTime(self):
 		return httpRequest(url = self.domain + '/1/timestamp/', method = 'GET', headers = self.headers)
 	def batch(self, requests, isTransaction = None):
@@ -292,19 +295,19 @@ class Bmob:
 			isTransaction = ''
 		else:
 			isTransaction = '?isTransaction=1'
-		return httpRequest(url = self.domain + '/1/batch' + isTransaction, method = 'POST', headers = self.headers, body = json.dumps(requests))
+		return httpRequest(url = self.domain + '/1/batch' + isTransaction, method = 'POST', headers = self.headers, body = json.dumps(requests, default=def_marshal))
 	def insert(self, className, data):
 		if isinstance(data, dict):
 			for k, v in data.items():
 				if(isinstance(v, BmobObject)):
 					data[k] = v.__dict__
-		return httpRequest(url = self.domain + '/1/classes/' + className, method = 'POST', headers = self.headers, body = json.dumps(data))
+		return httpRequest(url = self.domain + '/1/classes/' + className, method = 'POST', headers = self.headers, body = json.dumps(data, default=def_marshal))
 	def update(self, className, objectId, data):
 		if isinstance(data, dict):
 			for k, v in data.items():
 				if(isinstance(v, BmobObject)):
 					data[k] = v.__dict__
-		return httpRequest(url = self.domain + '/1/classes/' + className + '/' + objectId, method = 'PUT', headers = self.headers, body = json.dumps(data))
+		return httpRequest(url = self.domain + '/1/classes/' + className + '/' + objectId, method = 'PUT', headers = self.headers, body = json.dumps(data, default=def_marshal))
 	def remove(self, className, objectId):
 		return httpRequest(url = self.domain + '/1/classes/' + className + '/' + objectId, method = 'DELETE', headers = self.headers)
 	def find(self, table, where = None, limit = None, skip = None, order = None, include = None, keys = None, count = None, groupby = None, groupcount = None, min = None, max = None, sum = None, average = None, having = None, objectId = None):
@@ -343,7 +346,7 @@ class Bmob:
 				if where != None:
 					if isinstance(where, BmobQuerier):
 						where = where.filter
-					params += '&where=' + quote(json.dumps(where))
+					params += '&where=' + quote(json.dumps(where, default=def_marshal))
 				if len(params) != 0:
 					url += '?' + params[1:]
 			return httpRequest(url = url, method = 'GET', headers = self.headers)

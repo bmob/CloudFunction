@@ -21,3 +21,7 @@
 hs_err_pid*
 
 samples/encrypt.html
+
+python/sdk/test_inner.py
+
+*.pyc
