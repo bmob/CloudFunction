@@ -136,7 +136,7 @@ class BmobQuerier:
 		if maxRadians != None:
 			near["$maxDistanceInRadians"] = maxRadians
 		return self.putWhereFilter(key, near)
-	def addWhereWithinGeoBox(self, southwest, northeast):
+	def addWhereWithinGeoBox(self, key, southwest, northeast):
 		return self.putWhereFilter(key, {"$box": [southwest.__dict__, northeast.__dict__]}, "$within")
 	# 列表
 	def addWhereContainedIn(self, key, value, isIn = True):
