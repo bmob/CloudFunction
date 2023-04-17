@@ -248,7 +248,7 @@ def httpRequest(url, method = 'GET', headers = None, body = None, timeout = 10):
 
 class Bmob:
 	def __init__(self, appid, restkey):
-		self.domain = 'https://api2.bmob.cn'
+		self.domain = 'http://api.codenow.cn'
 		self.headers = {"X-Bmob-Application-Id": appid, "X-Bmob-REST-API-Key": restkey, "Content-Type": "application/json"}
 		self.appid = appid
 		self.restkey = restkey
